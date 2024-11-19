@@ -107,6 +107,11 @@ body {
     grid-column: 1 / span 4;
 }
 
+.codeInput {
+    width: 650px; 
+    height: 120px;
+}
+
 .completed-category .category-name {
     font-weight: bold;
     margin-bottom: 5px;
