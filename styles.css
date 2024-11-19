@@ -176,9 +176,14 @@ button:hover {
 }
 
 #messageBox {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 5px;
+    font-size: 16px;
+    transition: opacity 0.3s;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lives-counter {
     font-size: 16px;
     transition: opacity 0.3s;
     min-height: 40px;

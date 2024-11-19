@@ -3,7 +3,9 @@ let gameState = {
     selectedWords: [],
     solvedCategories: [],
     shuffledWords: [],
-    gameCompleted: false
+    gameCompleted: false,
+    maxAttempts: 0,
+    remainingAttempts: 0
 };
 
 // Theme handling
@@ -60,6 +62,9 @@ function generateGameCode() {
         gameData.categories.push({ name, items });
     }
 
+    const maxAttempts = parseInt(document.getElementById('max-attempts').value) || 0;
+    gameData.maxAttempts = maxAttempts;
+
     const gameCode = btoa(JSON.stringify(gameData));
     document.getElementById('gameCode').classList.remove('hidden');
     document.getElementById('generatedCode').value = gameCode;
@@ -79,18 +84,26 @@ function startGame() {
         gameState.selectedWords = [];
         gameState.solvedCategories = [];
         gameState.gameCompleted = false;
-        
+        gameState.maxAttempts = gameData.maxAttempts;
+        gameState.remainingAttempts = gameData.maxAttempts || Infinity;
         const allWords = gameState.categories.flatMap(cat => cat.items);
         gameState.shuffledWords = shuffleArray(allWords);
         
         showScreen('gameBoard');
         renderGame();
     } catch (e) {
-        alert('Invalid game code');
+        alert('Invalid game code' + e);
     }
 }
 
 function renderGame() {
+    const livesCounter = document.getElementById('livesCounter');
+    if (gameState.remainingAttempts === Infinity) {
+        livesCounter.textContent = 'Lives: Unlimited';
+    } else {
+        livesCounter.textContent = `Lives: ${gameState.remainingAttempts}`;
+        livesCounter.style.color = gameState.remainingAttempts > 3 ? 'var(--success-color)' : 'var(--error-color)';
+    };
     const completedCategoriesDiv = document.getElementById('completedCategories');
     completedCategoriesDiv.innerHTML = gameState.solvedCategories.map(category => `
         <div class="completed-category">
@@ -137,16 +150,29 @@ function renderGame() {
     }
 }
 
-function showMessage(message, type = 'error') {
-    const messageBox = document.getElementById('messageBox');
-    messageBox.textContent = message;
-    messageBox.className = type;
-    messageBox.classList.add('message-fade');
-    
-    setTimeout(() => {
+let messageQueue = []; // Queue to hold messages
+let isMessageActive = false; // To track if a message is being displayed
+
+async function showMessage(message, type = 'error') {
+    // Add the message to the queue
+    messageQueue.push({ message, type });
+
+    // Process messages from the queue
+    while (messageQueue.length > 0) {
+        isMessageActive = true;
+        const currentMessage = messageQueue.shift();
+
+        const messageBox = document.getElementById('messageBox');
+        messageBox.textContent = currentMessage.message;
+        messageBox.className = currentMessage.type;
+        messageBox.classList.add('message-fade');
+
+        // Wait for the fade-in and fade-out animation
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
         messageBox.classList.remove('message-fade');
         messageBox.textContent = '';
-    }, 3000);
+    }
 }
 
 async function pasteText() {
@@ -199,6 +225,7 @@ function checkSelection() {
             renderGame();
         }
     } else {
+        gameState.remainingAttempts--
         // Check if the selection is "one away" from a complete category
         const oneAwayCategory = gameState.categories.find(category => {
             const selectedCount = gameState.selectedWords.filter(word => category.items.includes(word)).length;
@@ -208,13 +235,27 @@ function checkSelection() {
 
         if (oneAwayCategory) {
             showMessage('One away!', 'nearly');
+
         } else {
             showMessage('Invalid category. Try again!');
         }
-
-        gameState.selectedWords = [];
-        renderGame();
+        if (gameState.remainingAttempts <= 0) {
+            showLostScreen();
+        } else{
+            gameState.selectedWords = [];
+            renderGame();
+        }
     }
+}
+
+function showLostScreen() {
+    const answersDiv = document.getElementById('correctAnswers');
+    answersDiv.innerHTML = gameState.categories.map(cat => `
+        <div>
+            <strong>${cat.name}</strong>: ${cat.items.join(', ')}
+        </div>
+    `).join('');
+    showScreen('lostScreen');
 }
 
 

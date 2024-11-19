@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="themeToggle" onclick="toggleTheme()">Toggle Theme</button>
     
     <div id="menu" class="screen">
         <h1>Word Connections</h1>
@@ -34,6 +33,9 @@
                 <input type="text" placeholder="Category 4 Name" id="cat4-name">
                 <input type="text" placeholder="Items (comma separated)" id="cat4-items">
             </div>
+            <div class="category-group">
+                <input type="number" placeholder="Number of allowed guesses (0 for unlimited)" id="max-attempts" min="0">
+            </div>            
         </div>
         <button onclick="generateGameCode()">Generate Game Code</button>
         <div id="gameCode" class="hidden">
@@ -57,12 +59,22 @@
     <div id="gameBoard" class="screen hidden">
         <div id="completedCategories"></div>
         <div id="wordGrid"></div>
+        <div id="livesCounter" class="lives-counter">Lives: Unlimited</div>
         <div id="messageBox"></div>
+    
         <button id="submitGuess" onclick="checkSelection()">Submit Selection</button>
         <button id="shuffleWords" onclick="shuffleGrid()">Shuffle Words</button>
         <button onclick="showMenu()">Back to Menu</button>
     </div>
+    
+    <div id="lostScreen" class="screen hidden">
+        <h2>You Lost!</h2>
+        <p>The correct answers were:</p>
+        <div id="correctAnswers"></div>
+        <button onclick="showMenu()">Back to Menu</button>
+    </div>
 
     <script src="script.js"></script>
+    
 </body>
 </html>
