@@ -2,7 +2,8 @@ let gameState = {
     categories: [],
     selectedWords: [],
     solvedCategories: [],
-    shuffledWords: [] // New property to store shuffled words
+    shuffledWords: [],
+    gameCompleted: false
 };
 
 // Theme handling
@@ -14,7 +15,7 @@ function toggleTheme() {
 
 // Initialize theme
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark'; // Changed default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 }
 
@@ -32,7 +33,11 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.remove('hidden');
 }
 
-function showMenu() { showScreen('menu'); }
+function showMenu() { 
+    gameState.gameCompleted = false;
+    showScreen('menu'); 
+}
+
 function showCreateGame() { showScreen('createGame'); }
 function showEnterCode() { showScreen('enterCode'); }
 
@@ -60,7 +65,6 @@ function generateGameCode() {
     document.getElementById('generatedCode').value = gameCode;
 }
 
-
 function copyGameCode() {
     const codeElement = document.getElementById('generatedCode');
     codeElement.select();
@@ -74,8 +78,8 @@ function startGame() {
         gameState.categories = gameData.categories;
         gameState.selectedWords = [];
         gameState.solvedCategories = [];
+        gameState.gameCompleted = false;
         
-        // Get all words and shuffle them initially
         const allWords = gameState.categories.flatMap(cat => cat.items);
         gameState.shuffledWords = shuffleArray(allWords);
         
@@ -87,7 +91,6 @@ function startGame() {
 }
 
 function renderGame() {
-    // Render completed categories
     const completedCategoriesDiv = document.getElementById('completedCategories');
     completedCategoriesDiv.innerHTML = gameState.solvedCategories.map(category => `
         <div class="completed-category">
@@ -96,27 +99,43 @@ function renderGame() {
         </div>
     `).join('');
 
-    // Get remaining words from shuffled array
-    const remainingWords = gameState.shuffledWords.filter(word => 
-        !gameState.solvedCategories.some(cat => cat.items.includes(word))
-    );
-
-    // Render word grid
     const wordGridDiv = document.getElementById('wordGrid');
-    wordGridDiv.innerHTML = remainingWords.map(word => `
-        <button class="word-button" onclick="toggleWord('${word}')">
-            ${word}
-        </button>
-    `).join('');
+    
+    if (gameState.gameCompleted) {
+        // Clear the word grid instead of showing finish button
+        wordGridDiv.innerHTML = '';
+        
+        // Hide submit and shuffle buttons
+        const submitButton = document.querySelector('button[onclick="checkSelection()"]');
+        const shuffleButton = document.querySelector('button[onclick="shuffleGrid()"]');
+        
+        if (submitButton) submitButton.style.display = 'none';
+        if (shuffleButton) shuffleButton.style.display = 'none';
+    } else {
+        // Show submit and shuffle buttons
+        const submitButton = document.querySelector('button[onclick="checkSelection()"]');
+        const shuffleButton = document.querySelector('button[onclick="shuffleGrid()"]');
+        
+        if (submitButton) submitButton.style.display = '';
+        if (shuffleButton) shuffleButton.style.display = '';
 
-    // Update selected state
-    gameState.selectedWords.forEach(word => {
-        const button = Array.from(document.getElementsByClassName('word-button'))
-            .find(btn => btn.textContent.trim() === word);
-        if (button) button.classList.add('selected');
-    });
+        const remainingWords = gameState.shuffledWords.filter(word => 
+            !gameState.solvedCategories.some(cat => cat.items.includes(word))
+        );
+
+        wordGridDiv.innerHTML = remainingWords.map(word => `
+            <button class="word-button" onclick="toggleWord('${word}')">
+                ${word}
+            </button>
+        `).join('');
+
+        gameState.selectedWords.forEach(word => {
+            const button = Array.from(document.getElementsByClassName('word-button'))
+                .find(btn => btn.textContent.trim() === word);
+            if (button) button.classList.add('selected');
+        });
+    }
 }
-
 
 function showMessage(message, type = 'error') {
     const messageBox = document.getElementById('messageBox');
@@ -124,7 +143,6 @@ function showMessage(message, type = 'error') {
     messageBox.className = type;
     messageBox.classList.add('message-fade');
     
-    // Remove the fade class after animation completes
     setTimeout(() => {
         messageBox.classList.remove('message-fade');
         messageBox.textContent = '';
@@ -151,7 +169,6 @@ function checkSelection() {
         return;
     }
 
-    // Check if selected words form a valid category
     const matchingCategory = gameState.categories.find(category =>
         category.items.every(item => gameState.selectedWords.includes(item)) &&
         !gameState.solvedCategories.find(solved => solved.name === category.name)
@@ -161,8 +178,9 @@ function checkSelection() {
         gameState.solvedCategories.push(matchingCategory);
         gameState.selectedWords = [];
         if (gameState.solvedCategories.length === 4) {
+            gameState.gameCompleted = true;
             showMessage('Congratulations! You\'ve solved all categories!', 'success');
-            setTimeout(() => showMenu(), 2000);
+            renderGame();
         } else {
             showMessage('Category found!', 'success');
             renderGame();
@@ -179,5 +197,4 @@ function shuffleGrid() {
     renderGame();
 }
 
-// Initialize theme when the page loads
 document.addEventListener('DOMContentLoaded', initTheme);
