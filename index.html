@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Connections Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button id="themeToggle" onclick="toggleTheme()">Toggle Theme</button>
+    
+    <div id="menu" class="screen">
+        <h1>Word Connections</h1>
+        <button onclick="showCreateGame()">Create Game</button>
+        <button onclick="showEnterCode()">Enter Game Code</button>
+    </div>
+
+    <div id="createGame" class="screen hidden">
+        <h2>Create Your Game</h2>
+        <div class="category-inputs">
+            <div class="category-group">
+                <input type="text" placeholder="Category 1 Name" id="cat1-name">
+                <input type="text" placeholder="Items (comma separated)" id="cat1-items">
+            </div>
+            <div class="category-group">
+                <input type="text" placeholder="Category 2 Name" id="cat2-name">
+                <input type="text" placeholder="Items (comma separated)" id="cat2-items">
+            </div>
+            <div class="category-group">
+                <input type="text" placeholder="Category 3 Name" id="cat3-name">
+                <input type="text" placeholder="Items (comma separated)" id="cat3-items">
+            </div>
+            <div class="category-group">
+                <input type="text" placeholder="Category 4 Name" id="cat4-name">
+                <input type="text" placeholder="Items (comma separated)" id="cat4-items">
+            </div>
+        </div>
+        <button onclick="generateGameCode()">Generate Game Code</button>
+        <div id="gameCode" class="hidden">
+            <p>Game Code:</p>
+            <textarea id="generatedCode" readonly></textarea>
+            <button onclick="copyGameCode()">Copy Code</button>
+        </div>
+        <button onclick="showMenu()">Back to Menu</button>
+    </div>
+
+    <div id="enterCode" class="screen hidden">
+        <h2>Enter Game Code</h2>
+        <textarea id="codeInput" placeholder="Paste game code here"></textarea>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="showMenu()">Back to Menu</button>
+    </div>
+
+    <div id="gameBoard" class="screen hidden">
+        <div id="completedCategories"></div>
+        <div id="wordGrid"></div>
+        <div id="messageBox"></div>
+        <button id="submitGuess" onclick="checkSelection()">Submit Selection</button>
+        <button id="shuffleWords" onclick="shuffleGrid()">Shuffle Words</button>
+        <button onclick="showMenu()">Back to Menu</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

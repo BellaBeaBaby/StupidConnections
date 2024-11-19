@@ -1,0 +1,203 @@
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --button-bg: #2d2d2d;
+    --button-border: #444;
+    --button-selected: #1e4d6b;
+    --button-selected-border: #2196F3;
+    --completed-bg: #2d4d31;
+    --completed-text: #ffffff;
+    --error-color: #ff4444;
+    --success-color: #4CAF50;
+}
+
+[data-theme="light"] {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --button-bg: #ffffff;
+    --button-border: #ccc;
+    --button-selected: #a0d8ef;
+    --button-selected-border: #2196F3;
+    --completed-bg: #4CAF50;
+    --completed-text: #ffffff;
+    --error-color: #ff4444;
+    --success-color: #4CAF50;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Landscape orientation check */
+@media screen and (max-width: 767px) and (orientation: portrait) {
+    #gameBoard, #menu, #createGame, #enterCode {
+        display: none !important;
+    }
+    
+    body::before {
+        content: "Please rotate your device to landscape mode";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        text-align: center;
+        font-size: 1.2em;
+        color: var(--text-color);
+        animation: rotate 2s infinite;
+        padding: 20px;
+    }
+    
+    @keyframes rotate {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        25% { transform: translate(-50%, -50%) rotate(90deg); }
+        50% { transform: translate(-50%, -50%) rotate(90deg); }
+        75% { transform: translate(-50%, -50%) rotate(90deg); }
+        100% { transform: translate(-50%, -50%) rotate(0deg); }
+    }
+}
+
+.screen {
+    margin: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+#wordGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.word-button {
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid var(--button-border);
+    border-radius: 5px;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.word-button.selected {
+    background-color: var(--button-selected);
+    border-color: var(--button-selected-border);
+}
+
+.completed-category {
+    background-color: var(--completed-bg);
+    color: var(--completed-text);
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    grid-column: 1 / span 4;
+}
+
+.completed-category .category-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.completed-category .category-items {
+    font-size: 0.9em;
+}
+
+.category-group {
+    margin: 15px 0;
+}
+
+.category-group input {
+    margin: 5px;
+    padding: 8px;
+    width: 80%;
+    max-width: 300px;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--button-border);
+}
+
+#gameCode textarea {
+    width: 80%;
+    height: 100px;
+    margin: 10px 0;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--button-border);
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#completedCategories {
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+#themeToggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 8px 16px;
+}
+
+#messageBox {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: opacity 0.3s;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#messageBox.error {
+    color: var(--error-color);
+}
+
+#messageBox.success {
+    color: var(--success-color);
+}
+
+.message-fade {
+    animation: fadeinout 3s forwards;
+}
+
+@keyframes fadeinout {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
