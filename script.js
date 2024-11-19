@@ -186,11 +186,24 @@ function checkSelection() {
             renderGame();
         }
     } else {
-        showMessage('Invalid category. Try again!');
+        // Check if the selection is "one away" from a complete category
+        const oneAwayCategory = gameState.categories.find(category => {
+            const selectedCount = gameState.selectedWords.filter(word => category.items.includes(word)).length;
+            return selectedCount === category.items.length - 1 && 
+                   !gameState.solvedCategories.find(solved => solved.name === category.name);
+        });
+
+        if (oneAwayCategory) {
+            showMessage('One away!', 'nearly');
+        } else {
+            showMessage('Invalid category. Try again!');
+        }
+
         gameState.selectedWords = [];
         renderGame();
     }
 }
+
 
 function shuffleGrid() {
     gameState.shuffledWords = shuffleArray(gameState.shuffledWords);

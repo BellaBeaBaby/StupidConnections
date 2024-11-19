@@ -9,6 +9,7 @@
     --completed-text: #ffffff;
     --error-color: #ff4444;
     --success-color: #4CAF50;
+    --nearly-color: #FFBF00;
 }
 
 [data-theme="light"] {
@@ -188,6 +189,10 @@ button:hover {
 
 #messageBox.success {
     color: var(--success-color);
+}
+
+#messageBox.nearly {
+    color: var(--nearly-color);
 }
 
 .message-fade {
