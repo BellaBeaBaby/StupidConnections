@@ -149,6 +149,19 @@ function showMessage(message, type = 'error') {
     }, 3000);
 }
 
+async function pasteText() {
+    try {
+        // Read clipboard content
+        const clipboardText = await navigator.clipboard.readText();
+        
+        // Display the clipboard content
+        document.getElementById('codeInput').value = clipboardText
+      } catch (err) {
+        // Handle errors, e.g., no clipboard access or permissions
+        alert('Failed to read clipboard: ' + err)
+      }
+}
+
 function toggleWord(word) {
     const index = gameState.selectedWords.indexOf(word);
     if (index === -1) {
