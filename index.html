@@ -37,12 +37,12 @@
                 <input type="number" placeholder="Number of allowed guesses (0 for unlimited)" id="max-attempts" min="0">
             </div>            
         </div>
-        <button onclick="generateGameCode()">Generate Game Code</button>
         <div id="gameCode" class="hidden">
             <p>Game Code:</p>
             <textarea id="generatedCode" readonly></textarea>
-            <button onclick="copyGameCode()">Copy Code</button>
+            </br><button onclick="copyGameCode()">Copy Code</button>
         </div>
+        <button onclick="generateGameCode()">Generate Game Code</button>
         <button onclick="showMenu()">Back to Menu</button>
     </div>
 

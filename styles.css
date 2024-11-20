@@ -109,6 +109,7 @@ body {
 .codeInput {
     width: 650px; 
     height: 120px;
+    background-color: var(--button-bg);
 }
 
 .completed-category .category-name {
