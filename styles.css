@@ -35,14 +35,14 @@ body {
     color: var(--text-color);
 }
 
-/* Remove hover effects on mobile devices, including landscape */
+
 @media (max-width: 1024px) {
     .element:hover {
-      background-color: transparent; /* Remove the hover effect */
+      background-color: transparent;
     }
   }
 
-/* Landscape orientation check */
+
 @media screen and (max-width: 767px) and (orientation: portrait) {
     #gameBoard, #menu, #createGame, #enterCode {
         display: none !important;
