@@ -8,14 +8,14 @@ let gameState = {
     remainingAttempts: 0
 };
 
-// Theme handling
+
 function toggleTheme() {
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
 }
 
-// Initialize theme
+
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -115,17 +115,14 @@ function renderGame() {
     const wordGridDiv = document.getElementById('wordGrid');
     
     if (gameState.gameCompleted) {
-        // Clear the word grid instead of showing finish button
+
         wordGridDiv.innerHTML = '';
-        
-        // Hide submit and shuffle buttons
         const submitButton = document.querySelector('button[onclick="checkSelection()"]');
         const shuffleButton = document.querySelector('button[onclick="shuffleGrid()"]');
         
         if (submitButton) submitButton.style.display = 'none';
         if (shuffleButton) shuffleButton.style.display = 'none';
     } else {
-        // Show submit and shuffle buttons
         const submitButton = document.querySelector('button[onclick="checkSelection()"]');
         const shuffleButton = document.querySelector('button[onclick="shuffleGrid()"]');
         
@@ -150,14 +147,11 @@ function renderGame() {
     }
 }
 
-let messageQueue = []; // Queue to hold messages
-let isMessageActive = false; // To track if a message is being displayed
+let messageQueue = [];
+let isMessageActive = false;
 
 async function showMessage(message, type = 'error') {
-    // Add the message to the queue
     messageQueue.push({ message, type });
-
-    // Process messages from the queue
     while (messageQueue.length > 0) {
         isMessageActive = true;
         const currentMessage = messageQueue.shift();
@@ -166,8 +160,6 @@ async function showMessage(message, type = 'error') {
         messageBox.textContent = currentMessage.message;
         messageBox.className = currentMessage.type;
         messageBox.classList.add('message-fade');
-
-        // Wait for the fade-in and fade-out animation
         await new Promise(resolve => setTimeout(resolve, 3000));
 
         messageBox.classList.remove('message-fade');
@@ -177,13 +169,9 @@ async function showMessage(message, type = 'error') {
 
 async function pasteText() {
     try {
-        // Read clipboard content
         const clipboardText = await navigator.clipboard.readText();
-        
-        // Display the clipboard content
         document.getElementById('codeInput').value = clipboardText
       } catch (err) {
-        // Handle errors, e.g., no clipboard access or permissions
         alert('Failed to read clipboard: ' + err)
       }
 }
@@ -226,7 +214,6 @@ function checkSelection() {
         }
     } else {
         gameState.remainingAttempts--
-        // Check if the selection is "one away" from a complete category
         const oneAwayCategory = gameState.categories.find(category => {
             const selectedCount = gameState.selectedWords.filter(word => category.items.includes(word)).length;
             return selectedCount === category.items.length - 1 && 
